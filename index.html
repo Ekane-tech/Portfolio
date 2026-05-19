@@ -6,6 +6,8 @@
 
 <title>Ekane Bryan — Frontend Developer</title>
 <link rel="stylesheet" href="./style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"
+/>
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Nunito:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
@@ -534,6 +536,93 @@
 
 </section>
 
+<!-- TESTIMONIALS -->
+
+<section id="testimonials">
+
+  <div class="container">
+
+    <div class="section-label">
+      Testimonials
+    </div>
+
+    <h2 class="section-title">
+      What People Say
+    </h2>
+
+    <p class="section-sub">
+      Feedback from clients and collaborators I've worked with.
+    </p>
+
+    <div class="testimonial-wrapper">
+
+      <div class="testimonial-slider" id="testimonialSlider">
+
+        <!-- TESTIMONIAL 1 -->
+
+        <div class="testimonial-card">
+
+          <div class="testimonial-top">
+            <div>
+              <div class="testimonial-name">
+                Brandon T.
+              </div>
+
+              <div class="testimonial-role">
+                Startup Founder
+              </div>
+            </div>
+
+          </div>
+
+          <p class="testimonial-text">
+            Ekane delivered a clean and modern interface exactly as expected.
+            Communication was smooth and the attention to detail was impressive.
+          </p>
+
+        </div>
+
+        <!-- TESTIMONIAL 2 -->
+
+        <div class="testimonial-card">
+
+          <div class="testimonial-top">
+            <div>
+              <div class="testimonial-name">
+                Sarah M.
+              </div>
+
+              <div class="testimonial-role">
+                Business Owner
+              </div>
+            </div>
+
+          </div>
+
+          <p class="testimonial-text">
+            Working with Ekane was a great experience.
+            The final website was fast, responsive and visually beautiful across devices.
+          </p>
+
+        </div>
+
+      </div>
+
+      <!-- DOTS -->
+
+      <div class="testimonial-dots">
+
+        <div class="testimonial-dot active"></div>
+        <div class="testimonial-dot"></div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</section>
+
 <!-- CONTACT -->
 
 <section id="contact">
@@ -565,7 +654,7 @@
           <a href="mailto:ekanebryan5@gmail.com" class="contact-item">
 
             <div class="contact-icon">
-              @
+              <i class="fa-solid fa-envelope"></i>
             </div>
 
             <div>
@@ -586,7 +675,7 @@
           class="contact-item">
 
             <div class="contact-icon">
-              WA
+              <i class="fa-brands fa-whatsapp"></i>
             </div>
 
             <div>
@@ -607,7 +696,7 @@
           class="contact-item">
 
             <div class="contact-icon">
-              GH
+              <i class="fa-brands fa-github"></i>
             </div>
 
             <div>
@@ -677,27 +766,27 @@
     <a
     href="mailto:ekanebryan5@gmail.com"
     class="social-btn">
-
-      @
-
+      <div class="contact-icon">
+       <i class="fa-solid fa-envelope"></i>
+      </div>
     </a>
 
     <a
     href="https://wa.me/237655126559"
     target="_blank"
     class="social-btn">
-
-      WA
-
+      <div class="contact-icon">
+        <i class="fa-brands fa-whatsapp"></i>
+      </div>
     </a>
 
     <a
     href="https://github.com/Flamzychoc"
     target="_blank"
     class="social-btn">
-
-      GH
-
+      <div class="contact-icon">
+        <i class="fa-brands fa-github"></i>
+      </div>
     </a>
 
   </div>
@@ -736,6 +825,47 @@ document.querySelectorAll('.reveal, .skill-card').forEach(el=>{
   observer.observe(el);
 });
 
+/* TESTIMONIAL SLIDER */
+
+const testimonialSlider = document.getElementById('testimonialSlider');
+const testimonialDots = document.querySelectorAll('.testimonial-dot');
+
+let currentTestimonial = 0;
+
+function showTestimonial(index){
+
+  testimonialSlider.style.transform =
+    `translateX(-${index * 100}%)`;
+
+  testimonialDots.forEach(dot =>
+    dot.classList.remove('active'));
+
+  testimonialDots[index].classList.add('active');
+}
+
+testimonialDots.forEach((dot, index) => {
+
+  dot.addEventListener('click', () => {
+
+    currentTestimonial = index;
+
+    showTestimonial(currentTestimonial);
+
+  });
+
+});
+
+setInterval(() => {
+
+  currentTestimonial++;
+
+  if(currentTestimonial >= testimonialDots.length){
+    currentTestimonial = 0;
+  }
+
+  showTestimonial(currentTestimonial);
+
+}, 5000);
 </script>
 
 </body>
