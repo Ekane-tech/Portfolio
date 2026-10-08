@@ -831,33 +831,50 @@
 
       </div>
 
-      <div class="contact-form reveal">
+      <form
+      class="contact-form reveal"
+      id="contactForm"
+      action="https://formsubmit.co/ekanebryan5@gmail.com"
+      method="POST">
+
+        <input type="hidden" name="_subject" value="New message from your portfolio">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+
+        <input
+        type="text"
+        name="_honey"
+        class="honey-field"
+        tabindex="-1"
+        autocomplete="off">
 
         <div class="form-group">
-          <label>Your Name</label>
-          <input type="text" placeholder="John Doe">
+          <label for="cf-name">Your Name</label>
+          <input id="cf-name" type="text" name="name" placeholder="John Doe" required>
         </div>
 
         <div class="form-group">
-          <label>Email Address</label>
-          <input type="email" placeholder="john@example.com">
+          <label for="cf-email">Email Address</label>
+          <input id="cf-email" type="email" name="email" placeholder="john@example.com" required>
         </div>
 
         <div class="form-group">
-          <label>Subject</label>
-          <input type="text" placeholder="Project collaboration">
+          <label for="cf-subject">Subject</label>
+          <input id="cf-subject" type="text" name="subject" placeholder="Project collaboration" required>
         </div>
 
         <div class="form-group">
-          <label>Message</label>
-          <textarea rows="5" placeholder="Tell me about your project..."></textarea>
+          <label for="cf-message">Message</label>
+          <textarea id="cf-message" name="message" rows="5" placeholder="Tell me about your project..." required></textarea>
         </div>
 
-        <button class="submit-btn">
+        <button type="submit" class="submit-btn">
           Send Message
         </button>
 
-      </div>
+        <p class="form-status" id="formStatus" role="status" aria-live="polite"></p>
+
+      </form>
 
     </div>
 
@@ -982,6 +999,86 @@ setInterval(() => {
   showTestimonial(currentTestimonial);
 
 }, 8000);
+
+/* CONTACT FORM — sends messages to ekanebryan5@gmail.com via FormSubmit */
+
+const contactForm = document.getElementById('contactForm');
+const formStatus = document.getElementById('formStatus');
+const submitBtn = document.querySelector('#contactForm .submit-btn');
+
+function setFormStatus(type, text){
+  formStatus.className = 'form-status ' + type;
+  formStatus.textContent = text;
+}
+
+contactForm.addEventListener('submit', async (e) => {
+
+  e.preventDefault();
+
+  /* Honeypot: real users never see this field — silently drop bots */
+  if(contactForm.querySelector('.honey-field').value){
+    return;
+  }
+
+  if(!contactForm.checkValidity()){
+    contactForm.reportValidity();
+    return;
+  }
+
+  const payload = Object.fromEntries(new FormData(contactForm));
+
+  /* Replies go straight to the sender */
+  payload._replyto = payload.email;
+
+  const originalLabel = submitBtn.textContent;
+
+  submitBtn.disabled = true;
+  submitBtn.textContent = 'Sending...';
+  setFormStatus('loading', '');
+
+  try{
+
+    const res = await fetch('https://formsubmit.co/ajax/ekanebryan5@gmail.com', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const result = await res.json();
+
+    /* FormSubmit returns HTTP 200 even on failure — trust the JSON body */
+    if(res.ok && String(result.success) === 'true'){
+
+      setFormStatus('success', "Message sent successfully! I'll get back to you as soon as possible.");
+
+      contactForm.reset();
+
+    } else if(String(result.message || '').toLowerCase().includes('activat')){
+
+      /* One-time activation: the owner must click the link FormSubmit emailed them */
+      setFormStatus('success', 'Message received! It will be delivered once the form is activated (a one-time setup step).');
+
+    } else {
+
+      setFormStatus('error', 'Something went wrong. Please email me directly at ekanebryan5@gmail.com.');
+
+    }
+
+  } catch(err){
+
+    setFormStatus('error', 'Something went wrong. Please email me directly at ekanebryan5@gmail.com.');
+
+  } finally {
+
+    submitBtn.disabled = false;
+    submitBtn.textContent = originalLabel;
+
+  }
+
+});
 </script>
 
 </body>

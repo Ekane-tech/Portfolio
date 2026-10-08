@@ -927,6 +927,48 @@ section{
   font-weight:800;
 
   cursor:pointer;
+
+  transition:.3s;
+}
+
+.submit-btn:disabled{
+  opacity:.65;
+  cursor:wait;
+}
+
+.form-status{
+  display:none;
+
+  margin-top:1rem;
+
+  font-size:.9rem;
+  text-align:center;
+}
+
+.form-status.success{
+  display:block;
+
+  color:#4ade80;
+}
+
+.form-status.error{
+  display:block;
+
+  color:#f87171;
+}
+
+.honey-field{
+  position:absolute;
+
+  left:-9999px;
+
+  width:1px;
+  height:1px;
+
+  opacity:0;
+
+  border:0;
+  padding:0;
 }
 
 /* FOOTER */
