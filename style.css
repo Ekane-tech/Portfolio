@@ -603,6 +603,10 @@ section{
   opacity:.35;
 }
 
+.project-thumb img.thumb-contain{
+  object-fit:contain;
+}
+
 .project-thumb-pattern{
   position:absolute;
   inset:0;

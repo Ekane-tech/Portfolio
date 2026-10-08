@@ -518,8 +518,9 @@
           <div class="project-thumb-pattern"></div>
 
           <img
-          src="ks-logo.png"
-          alt="Klass SARL">
+          src="klass-sarl-logo.png"
+          alt="Klass SARL"
+          class="thumb-contain">
 
           <span class="project-status live">
             <span class="live-dot"></span>
@@ -1047,29 +1048,43 @@ contactForm.addEventListener('submit', async (e) => {
       body: JSON.stringify(payload)
     });
 
-    const result = await res.json();
+    /* Read as text first — FormSubmit sometimes answers with an HTML page */
+    const raw = await res.text();
+
+    let result = null;
+
+    try{
+      result = JSON.parse(raw);
+    } catch(e){
+      /* not JSON — leave result null */
+    }
+
+    console.log('FormSubmit response:', res.status, raw);
 
     /* FormSubmit returns HTTP 200 even on failure — trust the JSON body */
-    if(res.ok && String(result.success) === 'true'){
+    if(result && String(result.success) === 'true'){
 
       setFormStatus('success', "Message sent successfully! I'll get back to you as soon as possible.");
 
       contactForm.reset();
 
-    } else if(String(result.message || '').toLowerCase().includes('activat')){
+    } else if(result && /activat/i.test(result.message || '')){
 
       /* One-time activation: the owner must click the link FormSubmit emailed them */
-      setFormStatus('success', 'Message received! It will be delivered once the form is activated (a one-time setup step).');
+      setFormStatus('success', 'Message received! It will be delivered after a one-time form activation (the activation email goes to the site owner).');
 
     } else {
 
-      setFormStatus('error', 'Something went wrong. Please email me directly at ekanebryan5@gmail.com.');
+      const reason = result && result.message ? ` — ${result.message}` : '';
+      setFormStatus('error', `Something went wrong${reason}. Please email me directly at ekanebryan5@gmail.com.`);
 
     }
 
   } catch(err){
 
-    setFormStatus('error', 'Something went wrong. Please email me directly at ekanebryan5@gmail.com.');
+    console.error('Contact form error:', err);
+
+    setFormStatus('error', 'Network error — the form service could not be reached. Please email me directly at ekanebryan5@gmail.com.');
 
   } finally {
 
